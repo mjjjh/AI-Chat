@@ -14,6 +14,14 @@ interface Message {
 }
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
+interface MessageItem {
+  content: string;
+  id: string;
+  metadata: any;
+  role: "user" | "assistant";
+  timestamp: string;
+}
+
 const DeepSeek: React.FC = () => {
   // 状态管理：分离用户输入和对话历史
   const [history, setHistory] = useState<Message[]>([]);
@@ -26,6 +34,7 @@ const DeepSeek: React.FC = () => {
       thread_id: string;
       userName: string;
       systemMsg: string;
+      closable?: boolean;
     }[]
   >([]);
 
@@ -58,26 +67,28 @@ const DeepSeek: React.FC = () => {
           {
             thread_id: uuidv4(),
             userName,
+            closable: false,
           },
         ];
       } else {
         threadIdList = data.threadIdList.map(
-          (item: { threadId: string; systemMsg: string }) => ({
+          (item: { threadId: string; systemMsg: string }, index: number) => ({
             thread_id: item.threadId,
             userName,
             systemMsg: item.systemMsg,
+            closable: index !== 0,
           })
         );
       }
       setThreadList(threadIdList);
       setThreadId(threadIdList[0].thread_id);
     };
+    if (!userName) return;
     getSessions();
   }, [userName]);
 
   useEffect(() => {
     const getThreadHistory = async () => {
-      if (!thread_id) return;
       const searchParams = new URLSearchParams({
         thread_id: thread_id,
         userName,
@@ -90,7 +101,13 @@ const DeepSeek: React.FC = () => {
             "Content-Type": "application/json",
           },
         });
-        const data = await res.json();
+        const data = (await res.json()) as {
+          messages: MessageItem[];
+          threadInfo: {
+            systemMsg: string;
+          };
+        };
+
         const { messages, threadInfo } = data;
         setSystemMsg(threadInfo?.systemMsg || "");
         setHistory(() => {
@@ -98,20 +115,17 @@ const DeepSeek: React.FC = () => {
           const history: Message[] = [];
           //   如果有toolMessage，则需要合并前后的aimessage
           for (const item of messages) {
-            if (item.id[2] === "ToolMessage" || item.id[2] === "SystemMessage")
-              continue;
             // 前一个和当前的item类型相同就合并
-            const nowRole =
-              item.id[2] === "HumanMessage" ? "user" : "assistant";
+            const nowRole = item.role;
             if (
               history.length > 0 &&
               history[history.length - 1].role === nowRole
             ) {
-              history[history.length - 1].content += item.kwargs.content;
+              history[history.length - 1].content += item.content;
             } else {
               history.push({
                 role: nowRole,
-                content: item.kwargs.content,
+                content: item.content,
               });
             }
           }
@@ -121,6 +135,7 @@ const DeepSeek: React.FC = () => {
         setError(`错误：${(err as Error).message}`); // 设置错误状态
       }
     };
+    if (!thread_id || !userName) return;
     getThreadHistory();
   }, [thread_id]);
 
@@ -417,14 +432,17 @@ const DeepSeek: React.FC = () => {
   };
 
   const addSession = () => {
-    setThreadList((prev) => [
-      ...prev,
-      {
-        thread_id: uuidv4(),
-        userName: userName,
-        systemMsg: "",
-      },
-    ]);
+    setThreadList((prev) => {
+      prev[0].closable = true;
+      return [
+        ...prev,
+        {
+          thread_id: uuidv4(),
+          userName: userName,
+          systemMsg: "",
+        },
+      ];
+    });
   };
 
   const removeSession = async (targetKey: TargetKey) => {
@@ -432,9 +450,12 @@ const DeepSeek: React.FC = () => {
     if (targetKey === thread_id) {
       setActiveKey(threadList[0]?.thread_id);
     }
-    setThreadList((prev) =>
-      prev.filter((item) => item.thread_id !== targetKey)
-    );
+
+    setThreadList((prev) => {
+      const result = prev.filter((item) => item.thread_id !== targetKey);
+      if (result.length === 1) result[0].closable = false;
+      return result;
+    });
     // 删除请求
     try {
       await fetch(`/api/history?thread_id=${targetKey}&userName=${userName}`, {
@@ -535,6 +556,7 @@ const DeepSeek: React.FC = () => {
           label: `会话${index + 1}`,
           key: item.thread_id,
           children: getTabItem(),
+          closable: item.closable,
         }))}
         onChange={setActiveKey}
         onEdit={onEdit}

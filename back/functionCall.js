@@ -1,5 +1,5 @@
-const app = require('./main.js');
-
+const app = require('./src/main.js');
+const { SEARCH_API } =require('./src/config.js')
 const getSubUrl = async (CityName) => {
     const res = await fetch("https://www.tianqi.com/chinacity.html");
     const html = await res.text();
@@ -155,7 +155,7 @@ app.post('/search', (req, res) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer bce-v3/ALTAK-5SXrCrTPe4nnnkWe1ZKDi/2962ac8a813b704eb0b75effe234093984feea4a`,
+                    "Authorization": `Bearer ${SEARCH_API}`,
                 },
                 body: JSON.stringify({
                     messages: [

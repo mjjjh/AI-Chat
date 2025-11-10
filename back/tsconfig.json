@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2020" /* 编译目标 JS 版本（匹配 Node.js 支持的版本，v16+ 支持 ES2020） */,
+    "module": "nodenext" /* 模块系统（Node.js 默认使用 CommonJS，需与 Node 兼容） */,
+    "outDir": "./dist" /* 编译后的 JS 文件输出目录（默认 dist，避免源码与编译产物混合） */,
+    "rootDir": "./src" /* TS 源码目录（建议把所有 TS 代码放在 src 文件夹下） */,
+    "strict": true /* 开启严格模式（强制类型检查，TS 核心优势，推荐必开） */,
+    "esModuleInterop": true /* 兼容 ES 模块和 CommonJS 模块（避免导入第三方模块报错） */,
+    "skipLibCheck": true /* 跳过第三方库的类型检查（加快编译速度） */,
+    "forceConsistentCasingInFileNames": true /* 强制文件名大小写一致（避免跨系统问题） */,
+    "moduleResolution": "nodenext",
+    "lib": [
+      "ES2022"
+    ] /* 编译时包含的库文件（ES2020 包含 Promise、async/await 等） */
+  },
+  "include": ["./src/**/*"] /* 需要编译的 TS 文件（src 下所有文件及子目录） */,
+  "exclude": ["node_modules", "dist"] /* 排除不需要编译的目录 */
+}

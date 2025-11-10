@@ -2,10 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "后端启动文件",
-  "main": "main.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon main.js"
+    "start": "nodemon --exec tsx ./src/main.ts",
+    "dev": "nodemon --exec tsx ./src/app.ts"
   },
   "author": "",
   "license": "ISC",
@@ -13,9 +14,14 @@
     "@langchain/core": "^1.0.2",
     "@langchain/openai": "^1.0.0",
     "express": "^5.1.0",
-    "langchain": "^1.0.2"
+    "langchain": "^1.0.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.0",
+    "nodemon": "^3.1.10",
+    "tsx": "^4.20.6"
   }
 }

@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    "chat-storage/**/*",
+    "node_modules/**/*",
+    "logs/**/*",
+    "*.json",
+    "*.csv",
+    "*.txt"
+  ],
+  "watch": ["src/**/*.ts"],
+  "delay": 1000
+}
