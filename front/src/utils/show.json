@@ -1,0 +1,101 @@
+{
+  "model": "deepseek-ai/DeepSeek-V3",
+  "temperature": 0.7,
+  "frequency_penalty": 0.5,
+  "n": 1,
+  "stream": false,
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "add",
+        "description": "两个数相加",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "a": { "type": "number" },
+            "b": { "type": "number" }
+          },
+          "required": ["a", "b"],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "multiply",
+        "description": "两个数相乘",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "a": { "type": "number" },
+            "b": { "type": "number" }
+          },
+          "required": ["a", "b"],
+          "additionalProperties": false
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "fetchData",
+        "description": "从CSDN论坛获取最新文章的相关数据内容",
+        "parameters": {
+          "type": "object",
+          "properties": { "input": { "type": "string" } },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "getWeather",
+        "description": "输入城市中文，获取指定城市的天气状况",
+        "parameters": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": { "city": { "type": "string" } },
+          "required": ["city"],
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "max_tokens": 4096,
+  "messages": [
+    { "role": "user", "content": "今天上海天气如何" },
+    {
+      "role": "assistant",
+      "content": "今天上海的天气如下：\n\n- **日期**: 2025年11月4日，星期二\n- **农历**: 乙巳年九月十五\n- **气温**: 14 ~ 19℃\n- **当前温度**: 14℃\n- **天气状况**: 雾\n- **湿度**: 67%\n- **风向**: 东北风，2级\n- **紫外线**: 很弱\n- **空气质量**: 优 (PM: 12)\n- **日出时间**: 06:12\n- **日落时间**: 17:03\n\n请注意保暖和出行安全！",
+      "name": "model"
+    },
+    { "role": "user", "content": "浦东呢" },
+    {
+      "role": "assistant",
+      "content": "",
+      "name": "model",
+      "tool_calls": [
+        {
+          "id": "019a4c6a70cae1d819571410aa803bbc",
+          "type": "function",
+          "function": {
+            "name": "getWeather",
+            "arguments": "{\"city\":\"浦东\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": "{\"msg\":\"天气信息获取成功\",\"data\":\"上海浦东天气 [切换城市] 2025年11月04日 星期二 乙巳年九月十五 13 ℃ 雾 13 ~ 19℃ 湿度：88% 风向：东北风 2级 紫外线：很弱 空气质量：优 PM: 13 日出: 06:11 日落: 17:03\"}",
+      "name": "getWeather",
+      "tool_call_id": "019a4c6a70cae1d819571410aa803bbc"
+    }
+  ]
+}

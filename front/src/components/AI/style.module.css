@@ -1,0 +1,230 @@
+.tabs :global(.ant-tabs-tab-remove) {
+  margin: 0;
+  padding: 0 3px;
+}
+
+/* 聊天容器整体样式 */
+.chat-container {
+  width: 100%;
+  max-width: 800px;
+  height: calc(100vh - 20px);
+  margin: 0 auto;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* 错误提示样式 */
+.error-message {
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 对话历史区域 */
+.chat-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+/* 滚动条美化（Chrome/Safari） */
+.chat-history::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-history::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-history::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 3px;
+}
+
+/* 加载状态样式 */
+.loading {
+  padding: 12px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* 加载动画（旋转圆点） */
+.loading::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: 2px solid #d1d5db;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* 输入区域样式 */
+.input-area {
+  /* max-height: 80px; */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 工具提示样式 */
+.tool-tips {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(180deg) scale(1.2);
+  }
+}
+
+.setting-icon:hover {
+  color: #3b82f6;
+  animation: rotate 0.3s ease-in-out;
+}
+
+/* 发送按钮样式 */
+.input-area button {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 4px 12px; /* px-to-rem-ignore */
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* 按钮悬停状态 */
+.input-area button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+/* 按钮禁用状态 */
+.input-area button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 按钮点击反馈 */
+.input-area button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* 动画定义 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 对话消息基础样式（需配合你的 renderHistory 渲染逻辑） */
+/* 如果你需要给用户/AI 消息加样式，可以补充以下类 */
+.chat-message {
+  margin-bottom: 12px;
+  padding: 5px 8px; /* px-to-rem-ignore */
+  border-radius: 8px;
+  max-width: 90%;
+  line-height: 1.5;
+}
+
+.user-message {
+  margin-left: auto;
+  background-color: #3b82f6;
+  color: white;
+}
+.user-name {
+  float: right;
+}
+.ai-name {
+  float: left;
+}
+
+.ai-message {
+  margin-right: auto;
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.no-message {
+  /* 居中 */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px; /* px-to-rem-ignore */
+  font-weight: 700;
+  color: #6b7280;
+  text-indent: 3px;
+  text-shadow: 0 1px 0 #ccc, 0 2px 0 #ccc, 0 3px 0 #ccc, 0 4px 0 #ccc,
+    0 5px 0 #ccc, 0 6px 0 #ccc, 0 7px 0 #ccc, 0 8px 0 #ccc, 0 9px 0 #ccc,
+    0 50px 30px rgba(0, 0, 0, 0.3);
+}
+
+.no-message span {
+  display: inline-block;
+  animation: jump 3000ms ease-in-out infinite; /* 动画周期改为 3s（跳跃1s + 停顿2s） */
+  animation-delay: var(--animation-delay);
+}
+
+@keyframes jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  } /* 停顿阶段（占 2s） */
+  16.7% {
+    transform: translateY(-10px);
+  } /* 跳跃阶段（占 1s，3000ms * 1/6 ≈ 500ms 上下） */
+  33.3% {
+    transform: translateY(0);
+  }
+}
